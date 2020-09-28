@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace ForgottenBot
 {
-    public partial class Form1 : Form
+    public partial class ForgottenInterface : Form
     {
-        public Form1()
+        public ForgottenInterface()
         {
             InitializeComponent();
             bgwForgotten.RunWorkerAsync();

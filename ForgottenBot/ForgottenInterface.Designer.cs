@@ -1,6 +1,6 @@
 ﻿namespace ForgottenBot
 {
-    partial class Form1
+    partial class ForgottenInterface
     {
         /// <summary>
         /// Required designer variable.
