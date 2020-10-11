@@ -11,7 +11,7 @@ namespace ForgottenBot.Modules.Admin
     public class MuteAll : ModuleBase<SocketCommandContext>
     {
         [Command("muteall")]
-        [Alias("mute", "mutechannel")]
+        [Alias("muteeveryone", "mutechannel")]
         [RequireUserPermission(Discord.GuildPermission.MuteMembers)]
         public async Task MuteAllAsync()
         {

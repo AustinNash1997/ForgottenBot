@@ -1,12 +1,14 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using ForgottenBot.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ namespace ForgottenBot.Utility
         private DiscordSocketClient _client;
         private CommandService _commandService;
         private IServiceProvider _services;
+        public List<AutoMessageModel> autoMessages = new List<AutoMessageModel>();
 
         //Instantiate Constants
         public const string PREFIX = "`";
@@ -49,7 +52,27 @@ namespace ForgottenBot.Utility
             await _client.StartAsync();                     //Start the client
 
             //Set the game status i.e "playing `help"
-            await _client.SetGameAsync("a game | type `help!");
+            await _client.SetGameAsync("a game |");
+
+            string fileToRead = @"E:\DiscordBot\Bot Config\autochat.txt";
+            List<string> fileText = File.ReadAllLines(fileToRead).ToList();
+
+            foreach (string line in fileText)
+            {
+                string[] splitRecord = line.Split('`');
+                if (splitRecord.Count() > 1)
+                {
+                    autoMessages.Add(new AutoMessageModel()
+                    {
+                        ServerID = ulong.Parse(splitRecord[0]),
+                        MessageCount = int.Parse(splitRecord[1]),
+                        ChannelID = ulong.Parse(splitRecord[2]),
+                        Message = splitRecord[3],
+                        ResetCounter = false,
+                        Counter = 0
+                    });
+                }
+            }
 
             await Task.Delay(-1); //Wait forever.
         }
@@ -59,7 +82,7 @@ namespace ForgottenBot.Utility
         {
             SocketGuild guild = user.Guild;                                             //Store the current server.
             SocketTextChannel channel = guild.DefaultChannel;                           //Store the current channel.
-            SocketRole newRole = guild.Roles.FirstOrDefault(x => x.Name == "Newbies");  //Find role to assign new members
+            SocketRole newRole = guild.Roles.FirstOrDefault(x => x.Name == "Members");  //Find role to assign new members
 
             await user.AddRoleAsync(newRole);                                           //Assign the new role.
 
@@ -75,6 +98,29 @@ namespace ForgottenBot.Utility
 
             //Send the message to the default channel.
             await channel.SendMessageAsync("", false, builder.Build());
+
+            await SetDefaultRole(user);
+        }
+
+        private static async Task SetDefaultRole(SocketGuildUser user)
+        {
+            //Set the default role
+            List<string> fileText = File.ReadAllLines(@"E:\DiscordBot\Bot Config").ToList();
+            string serverID = user.Guild.Id.ToString();
+
+            foreach (string line in fileText)
+            {
+                string[] splitRecord = line.Split('`');
+                if (splitRecord.Count() > 1)
+                {
+                    if (splitRecord[0] == serverID)
+                    {
+                        SocketRole foundRole = user.Guild.GetRole(ulong.Parse(splitRecord[1]));
+
+                        await user.AddRoleAsync(foundRole);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -123,18 +169,37 @@ namespace ForgottenBot.Utility
                     Console.WriteLine(result.ErrorReason);
                 }
             }
-            else if (message.Content.ToLower().Equals("raugh"))
+
+            SocketGuildChannel channel = (SocketGuildChannel)arg.Channel;
+            ulong channelID = arg.Channel.Id;
+
+
+            foreach (AutoMessageModel item in autoMessages)
             {
-                SocketCommandContext context = new SocketCommandContext(_client, message);
-                await context.Message.DeleteAsync();
-                await context.Channel.SendFileAsync(@"../../Images/Raughs/raugh.jpg");
+                if(item.ServerID == channel.Guild.Id)
+                {
+                    if(item.ChannelID == channelID)
+                    {
+                        if(item.Counter == item.MessageCount)
+                        {
+                            item.ResetCounter = true;
+                            await arg.Channel.SendMessageAsync($"{item.Message}");
+                        }
+                        else
+                        {
+                            item.Counter++;
+                        }
+
+                        if(item.ResetCounter)
+                        {
+                            item.ResetCounter = false;
+                            item.Counter = 0;
+                        }
+
+                    }
+                }
             }
-            else if (message.Content.ToLower().Equals("raughs"))
-            {
-                SocketCommandContext context = new SocketCommandContext(_client, message);
-                await context.Message.DeleteAsync();
-                await context.Channel.SendFileAsync(@"../../Images/Raughs/raughs.jpg");
-            }
+
         }
 
         /// <summary>
@@ -147,6 +212,11 @@ namespace ForgottenBot.Utility
         {
             try
             {
+                if(!Directory.Exists(@"../../Logs"))
+                {
+                    Directory.CreateDirectory(@"../../Logs");
+                }
+
                 StreamWriter errorLog = new StreamWriter(@"../../Logs/ErrorLog.txt", true);
                 await errorLog.WriteLineAsync($"{ DateTime.Now }:");
                 await errorLog.WriteLineAsync($"Author: {message.Author}");

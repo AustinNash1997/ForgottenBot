@@ -1,0 +1,27 @@
+2020-09-27 8:10:51 PM:
+Author: Ritual#4383
+Message: `Herro
+Retult: Unknown command.
+
+2020-09-27 8:18:48 PM:
+Author: Ritual#4383
+Message: `servers
+Retult: Unknown command.
+
+2020-09-27 8:19:38 PM:
+Author: Ritual#4383
+Message: `servers
+Retult: Field value must not be null or empty.
+Parameter name: Value
+
+2020-09-27 8:19:47 PM:
+Author: Ritual#4383
+Message: `servers
+Retult: Field value must not be null or empty.
+Parameter name: Value
+
+2020-10-11 2:55:04 PM:
+Author: Ritual#4383
+Message: `defaultRole <@&762502971505639445>
+Retult: Unknown command.
+

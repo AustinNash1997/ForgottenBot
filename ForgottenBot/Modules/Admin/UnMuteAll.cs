@@ -11,7 +11,7 @@ namespace ForgottenBot.Modules.Admin
     public class UnMuteAll : ModuleBase<SocketCommandContext>
     {
         [Command("unmuteall")]
-        [Alias("unmute", "unmutechannel")]
+        [Alias("unmuteeveryone", "unmutechannel")]
         [RequireUserPermission(Discord.GuildPermission.MuteMembers)]
         public async Task UnMuteAllAsync()
         {

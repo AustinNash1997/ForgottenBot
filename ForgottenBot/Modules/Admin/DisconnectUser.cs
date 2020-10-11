@@ -8,21 +8,18 @@ using System.Threading.Tasks;
 
 namespace ForgottenBot.Modules.Admin
 {
-    public class DisconnectAll : ModuleBase<SocketCommandContext>
+    public class DisconnectUser : ModuleBase<SocketCommandContext>
     {
-        [Command("disconnectAll")]
-        [Alias("dcAll", "disconnectChannel")]
+        [Command("disconnect")]
+        [Alias("disconnectUser", "dc")]
         [RequireUserPermission(Discord.GuildPermission.BanMembers)]
-        public async Task DisconnectAllAsync()
+        public async Task DisconnectUserAsync(SocketUser userToDC)
         {
-            List<SocketGuildUser> users = Context.Guild.VoiceChannels.Where(x => x.Users.Contains(Context.User)).FirstOrDefault().Users.ToList();
+            SocketGuildUser user = Context.Guild.VoiceChannels.Where(x => x.Users.Contains(userToDC)).FirstOrDefault().Users.FirstOrDefault(x=>x.Username == userToDC.Username);
 
-            if (users.Count > 0)
+            if (user.Username != null)
             {
-                foreach (SocketGuildUser user in users)
-                {
-                    await user.ModifyAsync(x => x.Channel = null);
-                }
+                await user.ModifyAsync(x => x.Channel = null);
             }
             else
             {
