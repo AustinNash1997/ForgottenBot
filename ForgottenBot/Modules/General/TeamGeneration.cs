@@ -11,12 +11,11 @@ using ForgottenBot.Utility;
 
 namespace ForgottenBot.Modules.General
 {
-    class TeamGeneration : ModuleBase<SocketCommandContext>
+    public class TeamGeneration : ModuleBase<SocketCommandContext>
     {
         Util util = new Util();
 
         [Command("teams")]
-        [RequireBotPermission(GuildPermission.MoveMembers)]
         public async Task ScrimAsync()
         {
             EmbedBuilder teamEmbed = new EmbedBuilder();

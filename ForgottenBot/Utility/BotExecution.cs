@@ -5,6 +5,7 @@ using ForgottenBot.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,7 +21,9 @@ namespace ForgottenBot.Utility
         private DiscordSocketClient _client;
         private CommandService _commandService;
         private IServiceProvider _services;
-        public List<AutoMessageModel> autoMessages = new List<AutoMessageModel>();
+        public static List<AutoMessageModel> autoMessages = new List<AutoMessageModel>();
+        public static List<SocketGuild> servers = new List<SocketGuild>();
+
 
         //Instantiate Constants
         public const string PREFIX = "`";
@@ -54,27 +57,62 @@ namespace ForgottenBot.Utility
             //Set the game status i.e "playing `help"
             await _client.SetGameAsync("a game |");
 
-            string fileToRead = @"E:\DiscordBot\Bot Config\autochat.txt";
-            List<string> fileText = File.ReadAllLines(fileToRead).ToList();
-
-            foreach (string line in fileText)
-            {
-                string[] splitRecord = line.Split('`');
-                if (splitRecord.Count() > 1)
-                {
-                    autoMessages.Add(new AutoMessageModel()
-                    {
-                        ServerID = ulong.Parse(splitRecord[0]),
-                        MessageCount = int.Parse(splitRecord[1]),
-                        ChannelID = ulong.Parse(splitRecord[2]),
-                        Message = splitRecord[3],
-                        ResetCounter = false,
-                        Counter = 0
-                    });
-                }
-            }
+            AddAutoMessage();
 
             await Task.Delay(-1); //Wait forever.
+        }
+
+        public List<SocketGuild> GetServers()
+        {
+            return _client.Guilds.ToList();
+        }
+
+        public static void AddAutoMessage()
+        {
+            string directoryToRead = @"E:\DiscordBot\Bot Config\autochat\";
+            List<string> filesToRead = Directory.GetFiles(directoryToRead).ToList();
+
+            foreach (string fileToRead in filesToRead)
+            {
+                List<string> fileText = File.ReadAllLines(fileToRead).ToList();
+
+                foreach (string line in fileText)
+                {
+                    string message = "";
+                    AutoMessageModel tempMessage = new AutoMessageModel();
+                    string[] splitRecord = line.Split('`');
+                    if (splitRecord.Count() > 1)
+                    {
+
+                        AutoMessageModel foundItem = autoMessages.FirstOrDefault(x => x.ServerID == ulong.Parse(splitRecord[0]) && x.MessageCount == int.Parse(splitRecord[1]) && x.ChannelID == ulong.Parse(splitRecord[2]));
+
+                        tempMessage = new AutoMessageModel()
+                        {
+                            ServerID = ulong.Parse(splitRecord[0]),
+                            MessageCount = int.Parse(splitRecord[1]),
+                            ChannelID = ulong.Parse(splitRecord[2]),
+                            ResetCounter = false,
+                            Counter = 0,
+                            Messages = new List<string>()
+                        };
+                        message = splitRecord[3];
+                        tempMessage.Messages.Add(message);
+
+                        if (foundItem != null)
+                        {
+                            if(!foundItem.Messages.Contains(message))
+                            {
+                                autoMessages.FirstOrDefault(x => x.ServerID == ulong.Parse(splitRecord[0]) && x.MessageCount == int.Parse(splitRecord[1]) && x.ChannelID == ulong.Parse(splitRecord[2])).Messages.Add(message);
+                            }
+                        }
+
+                        if (foundItem == null)
+                        {
+                            autoMessages.Add(tempMessage);
+                        }
+                    }
+                }
+            }
         }
 
         //Announce User Joined
@@ -82,16 +120,16 @@ namespace ForgottenBot.Utility
         {
             SocketGuild guild = user.Guild;                                             //Store the current server.
             SocketTextChannel channel = guild.DefaultChannel;                           //Store the current channel.
-            SocketRole newRole = guild.Roles.FirstOrDefault(x => x.Name == "Members");  //Find role to assign new members
+            //SocketRole newRole = guild.Roles.FirstOrDefault(x => x.Name == "Members");  //Find role to assign new members
 
-            await user.AddRoleAsync(newRole);                                           //Assign the new role.
+            //await user.AddRoleAsync(newRole);                                           //Assign the new role.
 
             EmbedBuilder builder = new EmbedBuilder();                                  //Create an Embed builder.
 
             //Assign the builder a title and add feilds to it.
             builder.WithTitle("New User")
 
-                .AddField("Welcome to the Server", $"We hope you enjoy the server {user.Mention}!")
+                .AddField($"Welcome to the {guild.Name}", $"We hope you enjoy the server {user.Mention}!")
                 .AddField("Joined at", user.JoinedAt)
                 .WithImageUrl(user.GetAvatarUrl())
                 .WithColor(Color.DarkPurple);
@@ -105,7 +143,7 @@ namespace ForgottenBot.Utility
         private static async Task SetDefaultRole(SocketGuildUser user)
         {
             //Set the default role
-            List<string> fileText = File.ReadAllLines(@"E:\DiscordBot\Bot Config").ToList();
+            List<string> fileText = File.ReadAllLines(@"E:\DiscordBot\Bot Config\autoroles.txt").ToList();
             string serverID = user.Guild.Id.ToString();
 
             foreach (string line in fileText)
@@ -183,7 +221,9 @@ namespace ForgottenBot.Utility
                         if(item.Counter == item.MessageCount)
                         {
                             item.ResetCounter = true;
-                            await arg.Channel.SendMessageAsync($"{item.Message}");
+                            Shuffle.ShuffleList(item.Messages);
+                            string messageToSend = item.Messages[0];
+                            await arg.Channel.SendMessageAsync($"{messageToSend}");
                         }
                         else
                         {
@@ -195,7 +235,6 @@ namespace ForgottenBot.Utility
                             item.ResetCounter = false;
                             item.Counter = 0;
                         }
-
                     }
                 }
             }

@@ -1,4 +1,6 @@
-﻿using ForgottenBot.Utility;
+﻿using Discord;
+using Discord.WebSocket;
+using ForgottenBot.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace ForgottenBot
 {
     public partial class ForgottenInterface : Form
     {
+        BotExecution botExecution = new BotExecution();
         public ForgottenInterface()
         {
             InitializeComponent();
@@ -21,8 +25,35 @@ namespace ForgottenBot
 
         private void bgwForgotten_DoWork(object sender, DoWorkEventArgs e)
         {
-            BotExecution botExecution = new BotExecution();
             botExecution.RunBotAsync().GetAwaiter().GetResult();
+        }
+
+        private void ForgottenInterface_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void cboServers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SocketGuild selectedServer = (SocketGuild)cboServers.SelectedItem;
+            cboChannels.DataSource = null;
+            cboChannels.DataSource = selectedServer.TextChannels.OrderBy(x => x.Name).ToList();
+        }
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            if(cboChannels.SelectedItem != null)
+            {
+                ITextChannel selectedChannel = (ITextChannel)cboChannels.SelectedItem;
+                selectedChannel.SendMessageAsync(txtMessage.Text).GetAwaiter().GetResult();
+                txtMessage.Text = "";
+            }
+        }
+
+        private void btnLoadServers_Click(object sender, EventArgs e)
+        {
+            cboServers.DataSource = null;
+            cboServers.DataSource = botExecution.GetServers();
         }
     }
 }

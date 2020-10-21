@@ -25,3 +25,23 @@ Author: Ritual#4383
 Message: `defaultRole <@&762502971505639445>
 Retult: Unknown command.
 
+2020-10-12 7:31:42 PM:
+Author: Ritual#4383
+Message: `automessage 3 test
+Retult: Access to the path 'E:\DiscordBot\Bot Config' is denied.
+
+2020-10-12 7:33:42 PM:
+Author: Ritual#4383
+Message: `automessage 2 testMessage for 2
+Retult: Access to the path 'E:\DiscordBot\Bot Config' is denied.
+
+2020-10-18 2:56:23 PM:
+Author: Ritual#4383
+Message: `automessage a new Test Message
+Retult: Failed to parse Int32.
+
+2020-10-18 3:00:24 PM:
+Author: Ritual#4383
+Message: `
+Retult: Unknown command.
+

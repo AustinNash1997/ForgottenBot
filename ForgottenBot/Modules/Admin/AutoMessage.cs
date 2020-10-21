@@ -17,8 +17,7 @@ namespace ForgottenBot.Modules.Admin
         [RequireUserPermission(Discord.GuildPermission.Administrator)]
         public async Task AutoMessageAsync(int count, [Remainder] string message)
         {
-            string fileToRead = @"E:\DiscordBot\Bot Config\autochat.txt";
-            List<string> fileText = File.ReadAllLines(fileToRead).ToList();
+            string fileToRead = $@"E:\DiscordBot\Bot Config\autochat\{Context.Guild.Id}.txt";
             string serverID = Context.Guild.Id.ToString();
 
             StreamWriter writer = new StreamWriter(fileToRead, true);
@@ -27,6 +26,8 @@ namespace ForgottenBot.Modules.Admin
 
             writer.Flush();
             writer.Close();
+
+            BotExecution.AddAutoMessage();
 
             await ReplyAsync($"{message} added to send every {count} messages");
             await Context.Message.DeleteAsync();

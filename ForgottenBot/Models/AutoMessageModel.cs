@@ -13,7 +13,7 @@ namespace ForgottenBot.Models
 
         public int MessageCount { get; set; }
         public ulong ChannelID { get; set; }
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
         public bool ResetCounter { get; set; }
         public int Counter { get; set; }
 

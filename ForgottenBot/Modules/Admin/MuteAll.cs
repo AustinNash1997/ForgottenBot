@@ -15,13 +15,14 @@ namespace ForgottenBot.Modules.Admin
         [RequireUserPermission(Discord.GuildPermission.MuteMembers)]
         public async Task MuteAllAsync()
         {
-            List<SocketGuildUser> users = Context.Guild.VoiceChannels.Where(x => x.Users.Contains(Context.User)).FirstOrDefault().Users.ToList();
+            SocketGuildUser guildUser = (SocketGuildUser)Context.User;
+            List<SocketGuildUser> users = guildUser.VoiceChannel.Users.ToList();
 
             if(users.Count > 0)
             {
                 foreach (SocketGuildUser user in users)
                 {
-                    await user.ModifyAsync(x => x.Mute = true);
+                    user.ModifyAsync(x => x.Mute = true).GetAwaiter().GetResult();
                 }
             }
             else
