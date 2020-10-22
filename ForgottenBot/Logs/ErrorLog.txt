@@ -45,3 +45,8 @@ Author: Ritual#4383
 Message: `
 Retult: Unknown command.
 
+2020-10-22 4:37:36 PM:
+Author: Ritual#4383
+Message: `muteall
+Retult: RunSynchronously may not be called on a task not bound to a delegate, such as the task returned from an asynchronous method.
+

@@ -14,6 +14,7 @@ namespace ForgottenBot.Modules.Admin
     public class AutoMessage : ModuleBase<SocketCommandContext>
     {
         [Command("automessage")]
+        [Alias("am", "addautomessage")]
         [RequireUserPermission(Discord.GuildPermission.Administrator)]
         public async Task AutoMessageAsync(int count, [Remainder] string message)
         {
@@ -32,5 +33,22 @@ namespace ForgottenBot.Modules.Admin
             await ReplyAsync($"{message} added to send every {count} messages");
             await Context.Message.DeleteAsync();
         }
+
+        [Command("help automessage")]
+        [Alias("help am", "help addautomessage")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task HelpAutoMessage()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("Auto Message")
+                .WithDescription("Adds an auto message")
+                .AddField("How To Use", "`AutoMessage {Count} {Message}")
+                .AddField("Count", "This is the message count for the message to appear")
+                .AddField("Message", "This is the message that will be displayed.")
+                .AddField("Example", "`AutoMessage 100 Why haven't you subbed to Chris Chronos yet?!?\r\n`am 100 WHY YOU NO SUB");
+
+            await ReplyAsync("", false, embedBuilder.Build());
+        }
+
     }
 }

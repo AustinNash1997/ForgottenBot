@@ -47,6 +47,21 @@ namespace ForgottenBot.Modules.Admin
             }
         }
 
+        [Command("help promote")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task HelpPromoteAsync()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("Promote")
+                .WithDescription("Promotes a user to a role")
+                .AddField("How To Use", "`promote {user} {role}")
+                .AddField("User", "This is the user you want to promote. Make sure you mention them with @User.")
+                .AddField("Role","This is the role you want to promote the user to. Make sure you mention it @Role.")
+                .AddField("Example", "`Promote @Ritual @SugarDaddy");
+
+            await ReplyAsync("", false, embedBuilder.Build());
+        }
+
         /// <summary>
         /// Find a user using a mention
         /// </summary>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-
+using Discord;
 
 namespace ForgottenBot.Modules.Admin
 {
@@ -48,6 +48,21 @@ namespace ForgottenBot.Modules.Admin
             }
             await ReplyAsync($"{autoRole.Name} added as a default");
             await Context.Message.DeleteAsync();
+        }
+
+        [Command("help autorole")]
+        [Alias("help addautorole", "help ar")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task HelpAutoRole()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("Auto Role")
+                .WithDescription("Add a default role other than \"everyone\"")
+                .AddField("How To Use", "`AutoRole {Role}")
+                .AddField("Role", "This is the role you would like to set as the default")
+                .AddField("Example", "`AutoRole @members");
+
+            await ReplyAsync("", false, embedBuilder.Build());
         }
     }
 }

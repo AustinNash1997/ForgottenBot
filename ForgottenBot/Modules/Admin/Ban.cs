@@ -27,6 +27,20 @@ namespace ForgottenBot.Modules.Admin
             await Context.Guild.AddBanAsync(guildUser);
         }
 
+        [Command("help ban")]
+        [RequireUserPermission(GuildPermission.BanMembers)]
+        public async Task HelpBan()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("BAN")
+                .WithDescription("Ban a naughty user")
+                .AddField("How To Use", "`Ban {user} ")
+                .AddField("User", "This is the user you want to BAN. Make sure to mention them using @User")
+                .AddField("Example", "`Ban @member");
+
+            await ReplyAsync("", false, embedBuilder.Build());
+        }
+
         /// <summary>
         /// Find a user using a mention
         /// </summary>

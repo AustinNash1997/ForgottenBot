@@ -76,5 +76,17 @@ namespace ForgottenBot.Modules.General
             //Context.Guild.CreateVoiceChannelAsync("Team Two");
 
         }
+
+        [Command("help teams")]
+        public async Task HelpTeams()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("Teams")
+                .WithDescription("Divides everyone connected in a Voice Channel into 2 teams")
+                .AddField("How To Use", "`teams")
+                .AddField("Example", "`teams");
+
+            await ReplyAsync("", false, embedBuilder.Build());
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ForgottenBot.Modules.Admin
             {
                 foreach (SocketGuildUser user in users)
                 {
-                    user.ModifyAsync(x => x.Mute = false).GetAwaiter().GetResult();
+                    user.ModifyAsync(x => x.Mute = false).RunSynchronously();//.GetAwaiter().GetResult();
                 }
             }
             else
@@ -30,6 +31,20 @@ namespace ForgottenBot.Modules.Admin
                 await ReplyAsync("I'm sorry, I could not find the users in your Voice Channel...");
             }
             await Context.Message.DeleteAsync();
+        }
+
+        [Command("help unmuteall")]
+        [Alias("help unmuteeveryone", "help unmutechannel")]
+        [RequireUserPermission(GuildPermission.MuteMembers)]
+        public async Task HelpUnMuteAll()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                .WithTitle("Unmute All")
+                .WithDescription("Unmutes everyone in the Voice Channel")
+                .AddField("How To Use", "`unmuteall")
+                .AddField("Example", "`unmuteall");
+
+            await ReplyAsync("", false, embedBuilder.Build());
         }
     }
 }
