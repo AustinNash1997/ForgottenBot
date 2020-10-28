@@ -54,8 +54,11 @@ namespace ForgottenBot.Utility
             await _client.LoginAsync(TokenType.Bot, TOKEN); //Log in with token 
             await _client.StartAsync();                     //Start the client
 
+
+            await _client.DownloadUsersAsync(_client.Guilds);
+
             //Set the game status i.e "playing `help"
-            await _client.SetGameAsync("a game |");
+            await _client.SetGameAsync("You",null, ActivityType.Watching);
 
             AddAutoMessage();
 
@@ -129,7 +132,7 @@ namespace ForgottenBot.Utility
             //Assign the builder a title and add feilds to it.
             builder.WithTitle("New User")
 
-                .AddField($"Welcome to the {guild.Name}", $"We hope you enjoy the server {user.Mention}!")
+                .AddField($"Welcome to {guild.Name}", $"We hope you enjoy the server {user.Mention}!")
                 .AddField("Joined at", user.JoinedAt)
                 .WithImageUrl(user.GetAvatarUrl())
                 .WithColor(Color.DarkPurple);

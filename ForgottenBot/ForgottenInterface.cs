@@ -37,7 +37,10 @@ namespace ForgottenBot
         {
             SocketGuild selectedServer = (SocketGuild)cboServers.SelectedItem;
             cboChannels.DataSource = null;
-            cboChannels.DataSource = selectedServer.TextChannels.OrderBy(x => x.Name).ToList();
+            cboChannels.DataSource = selectedServer.TextChannels.OrderBy(x => x.Position).ToList();
+
+            cboVoiceChannels.DataSource = null;
+            cboVoiceChannels.DataSource = selectedServer.VoiceChannels.OrderBy(x => x.Position).ToList();
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -54,6 +57,63 @@ namespace ForgottenBot
         {
             cboServers.DataSource = null;
             cboServers.DataSource = botExecution.GetServers();
+        }
+
+        private void btnMuteAll_Click(object sender, EventArgs e)
+        {
+            SocketVoiceChannel voiceChannel = (SocketVoiceChannel)cboVoiceChannels.SelectedItem;
+            
+            if(voiceChannel != null)
+            {
+                List<SocketGuildUser> users = voiceChannel.Users.ToList();
+
+                if (users.Count > 0)
+                {
+                    foreach (SocketGuildUser user in users)
+                    {
+                        IGuildUser user1 = (IGuildUser)user;
+                        user1.ModifyAsync(x => x.Mute = true).GetAwaiter().GetResult();
+                    }
+                }
+            }
+        }
+
+        private void btnUnMute_Click(object sender, EventArgs e)
+        {
+            SocketVoiceChannel voiceChannel = (SocketVoiceChannel)cboVoiceChannels.SelectedItem;
+            
+            if(voiceChannel != null)
+            {
+                List<SocketGuildUser> users = voiceChannel.Users.ToList();
+
+                if (users.Count > 0)
+                {
+                    foreach (SocketGuildUser user in users)
+                    {
+                        IGuildUser user1 = (IGuildUser)user;
+                        user1.ModifyAsync(x => x.Mute = false).GetAwaiter().GetResult();
+                    }
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SocketVoiceChannel voiceChannel = (SocketVoiceChannel)cboVoiceChannels.SelectedItem;
+
+            if (voiceChannel != null)
+            {
+                List<SocketGuildUser> users = voiceChannel.Users.ToList();
+
+                if (users.Count > 0)
+                {
+                    foreach (SocketGuildUser user in users)
+                    {
+                        IGuildUser user1 = (IGuildUser)user;
+                        user1.ModifyAsync(x => x.Channel = null).GetAwaiter().GetResult();
+                    }
+                }
+            }
         }
     }
 }

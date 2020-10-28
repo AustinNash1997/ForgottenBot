@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>29</ApplicationRevision>
+    <ApplicationRevision>61</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -141,6 +141,8 @@
     <Compile Include="Modules\Admin\Servers.cs" />
     <Compile Include="Modules\Admin\Spam.cs" />
     <Compile Include="Modules\Admin\UnMuteAll.cs" />
+    <Compile Include="Modules\General\Coin.cs" />
+    <Compile Include="Modules\General\flibu.cs" />
     <Compile Include="Modules\General\TeamGeneration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,9 +176,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
@@ -188,6 +188,15 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\databasesmall.png" />
+    <Content Include="Images\logo.ico" />
+    <Content Include="Images\microphonesmal.png" />
+    <Content Include="Images\mute.png" />
+    <Content Include="Images\mutesmall.png" />
+    <Content Include="Images\reloadsmall.png" />
+    <Content Include="Images\sendsmall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

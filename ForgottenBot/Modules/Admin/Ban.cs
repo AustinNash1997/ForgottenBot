@@ -22,7 +22,7 @@ namespace ForgottenBot.Modules.Admin
         {
             IGuildUser guildUser = FindUser(user) as IGuildUser;
 
-            await ReplyAsync($"{user} has been banned! :hammer:");
+            await ReplyAsync($"{user} has been banned! :hammer: Get out of here! We don't want you here!");
             await guildUser.SendMessageAsync(":hammer: You have received the BAN HAMMER :hammer:  ");
             await Context.Guild.AddBanAsync(guildUser);
         }

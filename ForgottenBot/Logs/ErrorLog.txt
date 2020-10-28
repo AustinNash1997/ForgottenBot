@@ -50,3 +50,29 @@ Author: Ritual#4383
 Message: `muteall
 Retult: RunSynchronously may not be called on a task not bound to a delegate, such as the task returned from an asynchronous method.
 
+2020-10-24 8:36:53 PM:
+Author: Ritual#4383
+Message: `dam
+Retult: Message content is too long, length must be less or equal to 2000.
+Parameter name: Content
+
+2020-10-27 5:06:11 PM:
+Author: Ritual#4383
+Message: `tos
+Retult: Unknown command.
+
+2020-10-27 5:06:13 PM:
+Author: Ritual#4383
+Message: `toss
+Retult: Unknown command.
+
+2020-10-27 6:33:52 PM:
+Author: Ritual#4383
+Message: `serve
+Retult: Unknown command.
+
+2020-10-27 6:38:51 PM:
+Author: Ritual#4383
+Message: `toss
+Retult: Unknown command.
+

@@ -18,17 +18,13 @@ namespace ForgottenBot.Modules.Admin
         [Alias("cls", "clr", "purge")]
         public async Task ClearMessageAsync([Remainder] int numberOfMessages = 5)
         {
-            if (numberOfMessages > 50)
-            {
-                numberOfMessages = 50;
-            }
             await Context.Message.DeleteAsync();
 
             IAsyncEnumerable<IMessage> messagesToDelete = Context.Channel.GetMessagesAsync(numberOfMessages).Flatten();
 
             ITextChannel channel = (ITextChannel)Context.Channel;
 
-            channel.DeleteMessagesAsync(messagesToDelete.ToEnumerable()).GetAwaiter().GetResult();
+            await channel.DeleteMessagesAsync(messagesToDelete.ToEnumerable());
             //await messagesToDelete.ForEachAsync(x => Context.Channel.DeleteMessageAsync(x.Id).Wait(100));
         }
 

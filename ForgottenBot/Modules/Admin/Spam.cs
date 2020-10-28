@@ -10,15 +10,13 @@ namespace ForgottenBot.Modules.Admin
     {
         [Command("spam")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task SpamAsync(SocketUser user, [Remainder] string spam)
+        public async Task SpamAsync(SocketUser user, int count, [Remainder] string spam)
         {
 
             SocketUser spamUser = user;
-            int count = 25;
-
-            if (Context.User != Context.Guild.Owner)
+            if(count == 0)
             {
-                spamUser = Context.User;
+                count = 25;
             }
 
             for (int i = 0; i < count; i++)

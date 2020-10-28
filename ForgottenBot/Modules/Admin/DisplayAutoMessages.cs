@@ -25,7 +25,7 @@ namespace ForgottenBot.Modules.Admin
             {
                 int messageIndex = 0;
                 SocketChannel channel = Context.Guild.GetChannel(item.ChannelID);
-
+                int breakCount = 0; 
                 List<String> messages = item.Messages;
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine($@"__Auto Messages for **{channel}** every **{item.MessageCount}** messages__");
@@ -33,8 +33,19 @@ namespace ForgottenBot.Modules.Admin
                 {
                     stringBuilder.AppendLine($"{messageIndex} - {message}");
                     messageIndex++;
+                    breakCount++;
+                    if (breakCount > 20)
+                    {
+                        await ReplyAsync(stringBuilder.ToString());
+                        stringBuilder = new StringBuilder();
+                        breakCount = 0;
+                    }
                 }
-                ReplyAsync(stringBuilder.ToString()).GetAwaiter().GetResult();
+                if(stringBuilder.ToString().Length > 0)
+                {
+                    await ReplyAsync(stringBuilder.ToString());
+
+                }
             }
 
         }

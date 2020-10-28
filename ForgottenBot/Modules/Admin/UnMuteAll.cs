@@ -23,7 +23,7 @@ namespace ForgottenBot.Modules.Admin
             {
                 foreach (SocketGuildUser user in users)
                 {
-                    user.ModifyAsync(x => x.Mute = false).RunSynchronously();//.GetAwaiter().GetResult();
+                    user.ModifyAsync(x => x.Mute = false).GetAwaiter().GetResult();
                 }
             }
             else
